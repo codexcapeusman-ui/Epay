@@ -33,7 +33,7 @@ if($admin_cdnpublic==1){
 </head>
 <body>
 <?php if($islogin==1){?>
-  <nav class="navbar navbar-fixed-top navbar-default">
+  <nav class="navbar navbar-fixed-top navbar-default admin-navbar">
     <div class="container">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -135,4 +135,34 @@ if($admin_cdnpublic==1){
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container -->
   </nav><!-- /.navbar -->
+  <script>
+  (function () {
+    var navbar = document.querySelector('.admin-navbar');
+    if (!navbar) return;
+
+    function syncAdminContentOffset() {
+      // Admin pages already include 70px of top padding for a standard 50px
+      // Bootstrap navbar. Add only the extra height when the menu wraps.
+      var navbarHeight = Math.ceil(navbar.getBoundingClientRect().height);
+      document.body.style.paddingTop = Math.max(0, navbarHeight - 50) + 'px';
+    }
+
+    syncAdminContentOffset();
+    window.addEventListener('load', syncAdminContentOffset);
+    window.addEventListener('resize', syncAdminContentOffset);
+
+    if (window.ResizeObserver) {
+      new ResizeObserver(syncAdminContentOffset).observe(navbar);
+    } else if (window.MutationObserver) {
+      new MutationObserver(syncAdminContentOffset).observe(navbar, {
+        attributes: true,
+        childList: true,
+        characterData: true,
+        subtree: true
+      });
+    }
+
+    $('#navbar').on('shown.bs.collapse hidden.bs.collapse', syncAdminContentOffset);
+  })();
+  </script>
 <?php }?>
