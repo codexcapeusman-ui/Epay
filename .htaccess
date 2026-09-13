@@ -1,0 +1,15 @@
+Options -Indexes
+
+RewriteEngine On
+
+# Prevent direct access to application internals.
+RewriteRule ^(?:plugins|includes)(?:/|$) - [F,L,NC]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([A-Za-z0-9_-]+)\.html$ index.php?mod=$1 [QSA,L]
+
+RewriteRule ^pay/(.*)$ pay.php?s=$1 [QSA,L]
+RewriteRule ^api/(.*)$ api.php?s=$1 [QSA,L]
+RewriteRule ^doc/([A-Za-z0-9_-]+)\.html$ index.php?doc=$1 [QSA,L]
+
